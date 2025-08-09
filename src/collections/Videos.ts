@@ -10,15 +10,10 @@ const Videos: CollectionConfig = {
     read: () => true,
   },
   admin: {
-    enableRichTextRelationship: false,
     group: 'Media',
   },
-  upload: {
-    staticURL: `${process.env.NEXT_PUBLIC_PAYLOAD_UPLOAD_ROUTE}/videos`,
-    staticDir: '../uploads/videos',
-    mimeTypes: ['video/mp4'],
-  },
-  fields: [],
+  upload: true,
+  fields: []
 }
 
 export default Videos

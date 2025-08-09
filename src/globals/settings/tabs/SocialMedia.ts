@@ -1,6 +1,5 @@
 import type { Tab } from 'payload'
 
-import { RowLabelArgs } from 'payload/dist/admin/components/forms/RowLabel'
 import { SocialMediaPlatformEnum } from '../../../enumerations'
 
 const SocialMedia: Tab = {
@@ -18,13 +17,6 @@ const SocialMedia: Tab = {
         nl: 'Sociale media links',
       },
       type: 'array',
-      admin: {
-        components: {
-          RowLabel: ({ data, index }: RowLabelArgs) => {
-            return data?.title || `Social ${index + 1}`
-          },
-        },
-      },
       fields: [
         {
           name: 'platform',

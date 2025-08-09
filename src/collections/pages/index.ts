@@ -58,6 +58,7 @@ const Pages: CollectionConfig = {
                 ],
                 beforeValidate: [
                     ({ data, siblingData }) => {
+                        if (!data) return;
                         if (!siblingData.slug && siblingData.title) {
                             if (siblingData.title.toLowerCase() === 'home') {
                                 data.slug = ''
@@ -92,6 +93,7 @@ const Pages: CollectionConfig = {
                 ],
                 afterRead: [
                     ({ data }) => {
+                        if (!data) return;
                         if (data.template === 'Home' || data.title.toLowerCase() === 'home') {
                             return '/'
                         }

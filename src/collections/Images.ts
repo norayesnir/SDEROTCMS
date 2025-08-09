@@ -1,15 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import type { ImageSize } from 'payload'
-
-const sizes = {
-  xs: 320,
-  sm: 640,
-  md: 960,
-  lg: 1200,
-  xl: 1600,
-  xxl: 2000,
-  xxxl: 2400,
-}
 
 const Images: CollectionConfig = {
   slug: 'images',
@@ -23,33 +12,7 @@ const Images: CollectionConfig = {
   admin: {
     group: 'Media',
   },
-  upload: {
-    staticURL: '/_ipx/images',
-    staticDir: '../../client/public/images',
-    adminThumbnail: 'xs',
-    imageSizes: [
-      ...Object.entries(sizes).map(([name, width]) => {
-        return {
-          name,
-          width,
-          formatOptions: {
-            format: 'webp' as ImageSize['formatOptions']['format'],
-            options: {
-              nearLossless: true,
-              quality: 75,
-              force: true,
-            },
-          },
-        }
-      }),
-      {
-        name: 'opengraph',
-        width: 1200,
-        height: 630,
-      },
-    ],
-    mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
-  },
+  upload: true,
   fields: [
     {
       name: 'description',

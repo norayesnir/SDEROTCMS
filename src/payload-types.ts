@@ -7,6 +7,18 @@
  */
 
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Socials".
+ */
+export type Socials =
+  | {
+      platform?: ('x' | 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'behance' | 'pinterest') | null;
+      title?: string | null;
+      url?: string | null;
+      id?: string | null;
+    }[]
+  | null;
+/**
  * Supported timezones in IANA format.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -67,16 +79,32 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    buttons: Button;
+    categories: Categories;
+    images: Image;
+    menu_item: MenuItem;
+    news: News;
+    pages: Page;
+    projects: Project;
+    teamMembers: TeamMembers;
     users: User;
-    media: Media;
+    videos: Video;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
+    buttons: ButtonsSelect<false> | ButtonsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    images: ImagesSelect<false> | ImagesSelect<true>;
+    menu_item: MenuItemSelect<false> | MenuItemSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -84,8 +112,14 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'navigation-menu': NavigationMenu;
+    'global-settings': GlobalSettings;
+  };
+  globalsSelect: {
+    'navigation-menu': NavigationMenuSelect<false> | NavigationMenuSelect<true>;
+    'global-settings': GlobalSettingsSelect<false> | GlobalSettingsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -115,10 +149,636 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buttons".
+ */
+export interface Button {
+  id: number;
+  title: string;
+  referenceToPage?:
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null);
+  externalUrl?: string | null;
+  externalLink?: boolean | null;
+  openInNewTab?: boolean | null;
+  icon?: {
+    icon?: string | null;
+    right?: boolean | null;
+  };
+  colorGroup?: {
+    /**
+     * Select the color of the button
+     */
+    color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  };
+  typeGroup?: {
+    /**
+     * Select the type of the button
+     */
+    type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  archive?: {
+    blocks?: HeroBlock[] | null;
+  };
+  fields?: {
+    blocks?:
+      | (HeroBlock | ContentImageBlock | ContentContentBlock | ImagesBlock | ContentContactBlock | TeamBlock)[]
+      | null;
+  };
+  title: string;
+  /**
+   * This field is automatically generated based on the title. To change it, edit the title field.
+   */
+  slug?: string | null;
+  /**
+   * A template must be selected to display relevant page fields. Changing the template on existing pages will result in data loss.
+   */
+  template: 'Archive' | 'Default';
+  route?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock".
+ */
+export interface HeroBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  image?: (number | null) | Image;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Heading".
+ */
+export interface Heading {
+  value?: string | null;
+  /**
+   * Select the type of the heading
+   */
+  type?: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "images".
+ */
+export interface Image {
+  id: number;
+  /**
+   * For vision-impaired users with screen readers, this is more descriptive than a caption.
+   */
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    xs?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    sm?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    md?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    lg?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xl?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xxl?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xxxl?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    opengraph?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentImageBlock".
+ */
+export interface ContentImageBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  image?: (number | null) | Image;
+  /**
+   * Change the display order of content and image in the current block
+   */
+  order?: ('default' | 'reversed') | null;
+  /**
+   * Set the block orientation to display content horizontally or vertically
+   */
+  orientation?: ('horizontal' | 'vertical') | null;
+  /**
+   * Choose whether to render the content as a card or standard layout
+   */
+  renderAsCard?: boolean | null;
+  /**
+   * Select the background color for the card of the current block
+   */
+  cardBackgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  /**
+   * Select the background color for the current block
+   */
+  backgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  textColor?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentImageBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentContentBlock".
+ */
+export interface ContentContentBlock {
+  cl?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  cr?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  /**
+   * Set the block orientation to display content horizontally or vertically
+   */
+  orientation?: ('horizontal' | 'vertical') | null;
+  /**
+   * Choose whether to render the content as a card or standard layout
+   */
+  renderAsCard?: boolean | null;
+  /**
+   * Select the background color for the card of the current block
+   */
+  cardBgColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  /**
+   * Select the background color for the current block
+   */
+  backgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  textColor?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentContentBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImagesBlock".
+ */
+export interface ImagesBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  images?:
+    | {
+        image?: (number | null) | Image;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Choose whether to render the content as a card or standard layout
+   */
+  renderAsCard?: boolean | null;
+  /**
+   * Select the background color for the card of the current block
+   */
+  cardBackgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  /**
+   * Select the background color for the current block
+   */
+  backgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  textColor?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imagesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentContactBlock".
+ */
+export interface ContentContactBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  /**
+   * Change the display order of content and image in the current block
+   */
+  order?: ('default' | 'reversed') | null;
+  /**
+   * Set the block orientation to display content horizontally or vertically
+   */
+  orientation?: ('horizontal' | 'vertical') | null;
+  /**
+   * Choose whether to render the content as a card or standard layout
+   */
+  renderAsCard?: boolean | null;
+  /**
+   * Select the background color for the card of the current block
+   */
+  cardBgColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  /**
+   * Select the background color for the current block
+   */
+  backgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  textColor?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentContactBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock".
+ */
+export interface TeamBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  members?: (number | TeamMembers)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'teamBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teamMembers".
+ */
+export interface TeamMembers {
+  id: number;
+  name?: string | null;
+  role?: string | null;
+  introduction?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Image;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  /**
+   * This field is  automatically generated based on the title. To change it, edit the title field.
+   */
+  slug?: string | null;
+  route?: string | null;
+  excerpt?: string | null;
+  featuredImage?: (number | null) | Image;
+  categories?: (number | Categories)[] | null;
+  blocks?: (HeroBlock | ContentBlock | RichTextBlock)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Categories {
+  id: number;
+  label?: string | null;
+  color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
+  icon?: {
+    icon?: string | null;
+    right?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  content?: {
+    heading?: Heading;
+    subtitle?: string | null;
+    text?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttons?: (number | Button)[] | null;
+  };
+  /**
+   * Choose whether to render the content as a card or standard layout
+   */
+  renderAsCard?: boolean | null;
+  /**
+   * Select the background color for the card of the current block
+   */
+  cardBackgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  /**
+   * Select the background color for the current block
+   */
+  backgroundColor?: ('primary' | 'secondary' | 'tertiary' | 'black' | 'white' | 'neutral-light') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock".
+ */
+export interface RichTextBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richTextBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  title: string;
+  /**
+   * This field is  automatically generated based on the title. To change it, edit the title field.
+   */
+  slug?: string | null;
+  route?: string | null;
+  excerpt?: string | null;
+  featuredImage?: (number | null) | Image;
+  categories?: (number | Categories)[] | null;
+  blocks?: (HeroBlock | ContentBlock | RichTextBlock | ImagesBlock)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu_item".
+ */
+export interface MenuItem {
+  id: number;
+  title: string;
+  /**
+   * Select a template for this menu item
+   */
+  template: 'Default' | 'Expandable';
+  default?: {
+    /**
+     * Check this box if the link is external
+     */
+    externalLink?: boolean | null;
+    referenceToPage?: (number | null) | Page;
+    externalUrl?: string | null;
+    /**
+     * Check this box if the link should open in a new tab
+     */
+    newTab?: boolean | null;
+    icon?: {
+      icon?: string | null;
+      right?: boolean | null;
+    };
+  };
+  expandable?: {
+    icon?: {
+      icon?: string | null;
+    };
+    children?: (number | MenuItem)[] | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  fullName?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -139,11 +799,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "videos".
  */
-export interface Media {
+export interface Video {
   id: number;
-  alt: string;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -164,12 +823,44 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'buttons';
+        value: number | Button;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Categories;
+      } | null)
+    | ({
+        relationTo: 'images';
+        value: number | Image;
+      } | null)
+    | ({
+        relationTo: 'menu_item';
+        value: number | MenuItem;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'teamMembers';
+        value: number | TeamMembers;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'videos';
+        value: number | Video;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -215,9 +906,452 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buttons_select".
+ */
+export interface ButtonsSelect<T extends boolean = true> {
+  title?: T;
+  referenceToPage?: T;
+  externalUrl?: T;
+  externalLink?: T;
+  openInNewTab?: T;
+  icon?:
+    | T
+    | {
+        icon?: T;
+        right?: T;
+      };
+  colorGroup?:
+    | T
+    | {
+        color?: T;
+      };
+  typeGroup?:
+    | T
+    | {
+        type?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  label?: T;
+  color?: T;
+  type?: T;
+  icon?:
+    | T
+    | {
+        icon?: T;
+        right?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "images_select".
+ */
+export interface ImagesSelect<T extends boolean = true> {
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        xs?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        sm?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        md?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        lg?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        xl?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        xxl?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        xxxl?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        opengraph?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu_item_select".
+ */
+export interface MenuItemSelect<T extends boolean = true> {
+  title?: T;
+  template?: T;
+  default?:
+    | T
+    | {
+        externalLink?: T;
+        referenceToPage?: T;
+        externalUrl?: T;
+        newTab?: T;
+        icon?:
+          | T
+          | {
+              icon?: T;
+              right?: T;
+            };
+      };
+  expandable?:
+    | T
+    | {
+        icon?:
+          | T
+          | {
+              icon?: T;
+            };
+        children?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  route?: T;
+  excerpt?: T;
+  featuredImage?: T;
+  categories?: T;
+  blocks?:
+    | T
+    | {
+        heroBlock?: T | HeroBlockSelect<T>;
+        contentBlock?: T | ContentBlockSelect<T>;
+        richTextBlock?: T | RichTextBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Heading_select".
+ */
+export interface HeadingSelect<T extends boolean = true> {
+  value?: T;
+  type?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  renderAsCard?: T;
+  cardBackgroundColor?: T;
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock_select".
+ */
+export interface RichTextBlockSelect<T extends boolean = true> {
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  archive?:
+    | T
+    | {
+        blocks?:
+          | T
+          | {
+              heroBlock?: T | HeroBlockSelect<T>;
+            };
+      };
+  fields?:
+    | T
+    | {
+        blocks?:
+          | T
+          | {
+              heroBlock?: T | HeroBlockSelect<T>;
+              contentImageBlock?: T | ContentImageBlockSelect<T>;
+              contentContentBlock?: T | ContentContentBlockSelect<T>;
+              imagesBlock?: T | ImagesBlockSelect<T>;
+              contentContactBlock?: T | ContentContactBlockSelect<T>;
+              teamBlock?: T | TeamBlockSelect<T>;
+            };
+      };
+  title?: T;
+  slug?: T;
+  template?: T;
+  route?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentImageBlock_select".
+ */
+export interface ContentImageBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  image?: T;
+  order?: T;
+  orientation?: T;
+  renderAsCard?: T;
+  cardBackgroundColor?: T;
+  backgroundColor?: T;
+  textColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentContentBlock_select".
+ */
+export interface ContentContentBlockSelect<T extends boolean = true> {
+  cl?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  cr?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  orientation?: T;
+  renderAsCard?: T;
+  cardBgColor?: T;
+  backgroundColor?: T;
+  textColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImagesBlock_select".
+ */
+export interface ImagesBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  renderAsCard?: T;
+  cardBackgroundColor?: T;
+  backgroundColor?: T;
+  textColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentContactBlock_select".
+ */
+export interface ContentContactBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  order?: T;
+  orientation?: T;
+  renderAsCard?: T;
+  cardBgColor?: T;
+  backgroundColor?: T;
+  textColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock_select".
+ */
+export interface TeamBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  members?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  route?: T;
+  excerpt?: T;
+  featuredImage?: T;
+  categories?: T;
+  blocks?:
+    | T
+    | {
+        heroBlock?: T | HeroBlockSelect<T>;
+        contentBlock?: T | ContentBlockSelect<T>;
+        richTextBlock?: T | RichTextBlockSelect<T>;
+        imagesBlock?: T | ImagesBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teamMembers_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  introduction?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  fullName?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -237,10 +1371,9 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
+ * via the `definition` "videos_select".
  */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
+export interface VideosSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -284,6 +1417,151 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation-menu".
+ */
+export interface NavigationMenu {
+  id: number;
+  logo?: (number | null) | Image;
+  /**
+   * When this is checked, the alternate logo will be used for the opposite theme. For example, if the main logo is used for the light theme, the alternate logo will be used for the dark theme.
+   */
+  uploadAlternateLogo?: boolean | null;
+  alternateLogo?: (number | null) | Image;
+  routes?: (number | MenuItem)[] | null;
+  button?: (number | null) | Button;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global-settings".
+ */
+export interface GlobalSettings {
+  id: number;
+  siteTitle?: string | null;
+  siteLogo?: (number | null) | Image;
+  siteFavicon?: (number | null) | Image;
+  contactInformation?: {
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+  };
+  socialMedia?: {
+    socials?: Socials;
+  };
+  legal?: {
+    copyright?: {
+      companyName?: string | null;
+      allRightsReservedLabel?: string | null;
+    };
+    termsOfService?: {
+      termsOfServiceLabel?: string | null;
+      /**
+       * The page that contains the Terms of Service
+       */
+      termsOfServicePage?: (number | null) | Page;
+    };
+    privacyPolicy?: {
+      privacyPolicyLabel?: string | null;
+      /**
+       * The page that contains the Privacy Policy
+       */
+      privacyPolicyPage?: (number | null) | Page;
+    };
+    extraButtons?: (number | Button)[] | null;
+  };
+  blog?: {
+    page?: (number | null) | Page;
+  };
+  projects?: {
+    page?: (number | null) | Page;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation-menu_select".
+ */
+export interface NavigationMenuSelect<T extends boolean = true> {
+  logo?: T;
+  uploadAlternateLogo?: T;
+  alternateLogo?: T;
+  routes?: T;
+  button?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global-settings_select".
+ */
+export interface GlobalSettingsSelect<T extends boolean = true> {
+  siteTitle?: T;
+  siteLogo?: T;
+  siteFavicon?: T;
+  contactInformation?:
+    | T
+    | {
+        email?: T;
+        phone?: T;
+        address?: T;
+      };
+  socialMedia?:
+    | T
+    | {
+        socials?: T | SocialsSelect<T>;
+      };
+  legal?:
+    | T
+    | {
+        copyright?:
+          | T
+          | {
+              companyName?: T;
+              allRightsReservedLabel?: T;
+            };
+        termsOfService?:
+          | T
+          | {
+              termsOfServiceLabel?: T;
+              termsOfServicePage?: T;
+            };
+        privacyPolicy?:
+          | T
+          | {
+              privacyPolicyLabel?: T;
+              privacyPolicyPage?: T;
+            };
+        extraButtons?: T;
+      };
+  blog?:
+    | T
+    | {
+        page?: T;
+      };
+  projects?:
+    | T
+    | {
+        page?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Socials_select".
+ */
+export interface SocialsSelect<T extends boolean = true> {
+  platform?: T;
+  title?: T;
+  url?: T;
+  id?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

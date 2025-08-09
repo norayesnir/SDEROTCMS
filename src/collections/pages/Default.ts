@@ -5,9 +5,7 @@ import {
   ContentContentBlock,
   ImagesBlock,
   ContentContactBlock,
-  FeaturedNewsBlock,
   TeamBlock,
-  ContentArticleBlock,
 } from '../../blocks'
 
 const Default: Field = {
@@ -28,9 +26,7 @@ const Default: Field = {
         ContentContentBlock,
         ImagesBlock,
         ContentContactBlock,
-        FeaturedNewsBlock,
         TeamBlock,
-        ContentArticleBlock,
       ],
     },
   ],
