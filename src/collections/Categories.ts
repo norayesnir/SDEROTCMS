@@ -50,6 +50,7 @@ const Categories: CollectionConfig = {
       type: 'select',
       options: ButtonTypeEnum,
     },
+    icon(),
   ],
 }
 
