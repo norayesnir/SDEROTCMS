@@ -1,13 +1,25 @@
+import dotenv from 'dotenv'
 import type { CollectionConfig } from 'payload'
 
-export const Users: CollectionConfig = {
+dotenv.config()
+
+const Users: CollectionConfig = {
   slug: 'users',
-  admin: {
-    useAsTitle: 'email',
+  labels: {
+    singular: 'User',
+    plural: 'Users',
   },
   auth: true,
+  admin: {
+    group: 'Admin',
+    useAsTitle: 'fullName',
+  },
   fields: [
-    // Email added by default
-    // Add more fields as needed
-  ],
+    {
+      name: 'fullName',
+      type: 'text',
+    },
+  ]
 }
+
+export default Users

@@ -1,0 +1,5 @@
+export { default as Legal } from './Legal'
+export { default as ContactInformation } from './ContactInformation'
+export { default as SocialMedia } from './SocialMedia'
+export { default as Blog } from './Blog'
+export { default as Projects } from './Projects'

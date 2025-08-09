@@ -1,0 +1,7 @@
+export { default as BackgroundColorsEnum } from './BackgroundColors'
+export { default as ButtonTypeEnum } from './ButtonType'
+export { default as HeadingEnum } from './HeadingTypes'
+export { default as OrderEnum } from './Order'
+export { default as OrientationEnum } from './Orientation'
+export { default as ColorEnum } from './Color'
+export { default as SocialMediaPlatformEnum } from './SocialMediaPlatform'
