@@ -12,7 +12,10 @@ const Images: CollectionConfig = {
   admin: {
     group: 'Media',
   },
-  upload: true,
+  upload: {
+      disableLocalStorage: true,
+      crop: false
+  },
   fields: [
     {
       name: 'description',
