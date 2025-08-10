@@ -5,7 +5,6 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-import type { PayloadHandler } from 'payload'
 
 import * as Collections from './collections';
 import * as Globals from './globals';
@@ -48,7 +47,12 @@ export default buildConfig({
                 images: true,
                 videos: true
             },
+            clientUploads: true,
             token: process.env.BLOB_READ_WRITE_TOKEN
         })
     ],
+    cors: [
+        'https://sderot.nl/',
+        'https://9ckexqslama90hed.public.blob.vercel-storage.com'
+    ]
 })
