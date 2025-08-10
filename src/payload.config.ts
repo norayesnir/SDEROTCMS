@@ -54,14 +54,16 @@ export default buildConfig({
         },
     }),
     email: nodemailerAdapter({
-        host: NODE_MAILER_HOST,
-        port: NODE_MAILER_PORT,
-        auth: {
-            user: NODE_MAILER_USER,
-            pass: NODE_MAILER_PASS
+        defaultFromAddress: NODE_MAILER_ADDRESS as string,
+        defaultFromName: 'SDEROT',
+        transportOptions: {
+            host: NODE_MAILER_HOST,
+            port: NODE_MAILER_PORT,
+            auth: {
+                user: NODE_MAILER_USER,
+                pass: NODE_MAILER_PASS
+            },
         },
-        fromName: 'SDEROT',
-        formAddress: NODE_MAILER_ADDRESS
     }),
     sharp,
     plugins: [
