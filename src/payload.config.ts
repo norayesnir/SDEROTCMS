@@ -1,9 +1,11 @@
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import type { PayloadHandler } from 'payload'
 
 import * as Collections from './collections';
 import * as Globals from './globals';
@@ -20,24 +22,33 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  admin: {
-    user: Collections.Users.slug,
-    importMap: {
-      baseDir: path.resolve(dirname),
+    admin: {
+        user: Collections.Users.slug,
+        importMap: {
+            baseDir: path.resolve(dirname),
+        },
     },
-  },
-  collections: validatedCollections,
-  globals: validatedGlobals,
-  editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
-  typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
-  },
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.POSTGRES_URL || '',
+    collections: validatedCollections,
+    globals: validatedGlobals,
+    editor: lexicalEditor(),
+    secret: process.env.PAYLOAD_SECRET || '',
+    typescript: {
+        outputFile: path.resolve(dirname, 'payload-types.ts'),
     },
-  }),
-  sharp,
-  plugins: [],
+    db: vercelPostgresAdapter({
+        pool: {
+            connectionString: process.env.POSTGRES_URL || '',
+        },
+    }),
+    sharp,
+    plugins: [
+        vercelBlobStorage({
+            enabled: true,
+            collections: {
+                images: true,
+                videos: true
+            },
+            token: process.env.BLOB_READ_WRITE_TOKEN
+        })
+    ],
 })
