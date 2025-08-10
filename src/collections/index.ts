@@ -1,7 +1,6 @@
 export { default as Images } from './Images'
 export { default as Pages } from './pages'
 export { default as Users } from './Users'
-export { default as Videos } from './Videos'
 export { default as MenuItem } from './menuItems'
 export { default as Buttons } from './Buttons'
 export { default as News } from './News'

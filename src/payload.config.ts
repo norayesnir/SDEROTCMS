@@ -1,5 +1,6 @@
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -20,6 +21,19 @@ const validatedGlobals = Object.values(Globals).filter(
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const {
+    SITE_URL,
+    BLOB_BASE_URL,
+    PAYLOAD_SECRET,
+    POSTGRES_URL,
+    BLOB_READ_WRITE_TOKEN,
+    NODE_MAILER_HOST,
+    NODE_MAILER_PORT,
+    NODE_MAILER_USER,
+    NODE_MAILER_PASS,
+    NODE_MAILER_ADDRESS,
+} = process.env;
+
 export default buildConfig({
     admin: {
         user: Collections.Users.slug,
@@ -30,29 +44,36 @@ export default buildConfig({
     collections: validatedCollections,
     globals: validatedGlobals,
     editor: lexicalEditor(),
-    secret: process.env.PAYLOAD_SECRET || '',
+    secret: PAYLOAD_SECRET || '',
     typescript: {
         outputFile: path.resolve(dirname, 'payload-types.ts'),
     },
     db: vercelPostgresAdapter({
         pool: {
-            connectionString: process.env.POSTGRES_URL || '',
+            connectionString: POSTGRES_URL || '',
         },
+    }),
+    email: nodemailerAdapter({
+        host: NODE_MAILER_HOST,
+        port: NODE_MAILER_PORT,
+        auth: {
+            user: NODE_MAILER_USER,
+            pass: NODE_MAILER_PASS
+        },
+        fromName: 'SDEROT',
+        formAddress: NODE_MAILER_ADDRESS
     }),
     sharp,
     plugins: [
         vercelBlobStorage({
             enabled: true,
-            collections: {
-                images: true,
-                videos: true
-            },
+            collections: { images: true },
             clientUploads: true,
-            token: process.env.BLOB_READ_WRITE_TOKEN
+            token: BLOB_READ_WRITE_TOKEN,
         })
     ],
     cors: [
-        'https://sderot.nl/',
-        'https://9ckexqslama90hed.public.blob.vercel-storage.com'
+        SITE_URL as string,
+        BLOB_BASE_URL as string
     ]
 })
