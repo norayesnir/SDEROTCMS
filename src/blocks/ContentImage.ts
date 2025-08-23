@@ -21,7 +21,6 @@ const ContentImage: Block = {
     },
   },
   interfaceName: 'ContentImageBlock',
-  imageURL: 'https://picsum.photos/200',
   fields: [
     {
       type: 'tabs',

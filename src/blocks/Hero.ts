@@ -14,7 +14,6 @@ const Hero: Block = {
     },
   },
   interfaceName: 'HeroBlock',
-  imageURL: 'https://picsum.photos/200',
   fields: [content(), image()],
 }
 

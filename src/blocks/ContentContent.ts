@@ -20,7 +20,6 @@ const ContentContent: Block = {
         },
     },
     interfaceName: 'ContentContentBlock',
-    imageURL: 'https://picsum.photos/200',
     fields: [
         {
             type: 'tabs',

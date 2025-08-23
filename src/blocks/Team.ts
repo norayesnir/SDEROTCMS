@@ -14,7 +14,6 @@ const Team: Block = {
     },
   },
   interfaceName: 'TeamBlock',
-  imageURL: 'https://picsum.photos/200',
   fields: [
     content(),
     {

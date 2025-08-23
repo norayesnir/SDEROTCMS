@@ -5,6 +5,7 @@ import {
     ContentContentBlock,
     ImagesBlock,
     ContentContactBlock,
+    RichTextBlock,
     TeamBlock,
 } from '../../blocks'
 
@@ -84,6 +85,7 @@ const Pages: CollectionConfig = {
                 ContentContentBlock,
                 ImagesBlock,
                 ContentContactBlock,
+                RichTextBlock,
                 TeamBlock,
             ],
         },

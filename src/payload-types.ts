@@ -287,7 +287,15 @@ export interface Page {
    */
   slug?: string | null;
   blocks?:
-    | (HeroBlock | ContentImageBlock | ContentContentBlock | ImagesBlock | ContentContactBlock | TeamBlock)[]
+    | (
+        | HeroBlock
+        | ContentImageBlock
+        | ContentContentBlock
+        | ImagesBlock
+        | ContentContactBlock
+        | RichTextBlock
+        | TeamBlock
+      )[]
     | null;
   route?: string | null;
   updatedAt: string;
@@ -532,6 +540,30 @@ export interface ContentContactBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock".
+ */
+export interface RichTextBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richTextBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TeamBlock".
  */
 export interface TeamBlock {
@@ -627,30 +659,6 @@ export interface ContentBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'contentBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RichTextBlock".
- */
-export interface RichTextBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'richTextBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1031,6 +1039,7 @@ export interface PagesSelect<T extends boolean = true> {
         contentContentBlock?: T | ContentContentBlockSelect<T>;
         imagesBlock?: T | ImagesBlockSelect<T>;
         contentContactBlock?: T | ContentContactBlockSelect<T>;
+        richTextBlock?: T | RichTextBlockSelect<T>;
         teamBlock?: T | TeamBlockSelect<T>;
       };
   route?: T;

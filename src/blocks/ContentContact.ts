@@ -21,7 +21,6 @@ const ContentContact: Block = {
     },
   },
   interfaceName: 'ContentContactBlock',
-  imageURL: 'https://picsum.photos/200',
   fields: [
     {
       type: 'tabs',
