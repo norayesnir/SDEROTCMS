@@ -1,34 +1,43 @@
 import type { CollectionConfig } from 'payload'
-import { livePreviewBreakpoints } from '../utils'
 import { image } from '../fields'
-import { HeroBlock, ContentBlock, RichTextBlock } from '../blocks'
+import { HeroBlock, ContentBlock, ContentImageBlock, RichTextBlock } from '../blocks'
 
-const News: CollectionConfig = {
-    slug: 'news',
+const Articles: CollectionConfig = {
+    slug: 'articles',
     labels: {
         singular: {
-            en: 'News',
-            nl: 'Nieuws',
+            en: 'Article',
+            nl: 'Artiekel',
         },
         plural: {
-            en: 'News',
-            nl: 'Nieuws',
+            en: 'Articles',
+            nl: 'Artiekelen',
         },
     },
     admin: {
-        useAsTitle: 'title',
-        defaultColumns: ['title', 'template', 'id'],
-        livePreview: {
-            url: ({ data }) =>
-                `${process.env.NEXT_PUBLIC_PAYLOAD_SITE_URL}/${data.title.toLowerCase()}`,
-            breakpoints: livePreviewBreakpoints,
-        },
+        useAsTitle: 'interfaceTitle',
     },
     access: {
         read: () => true,
     },
     versions: true,
     fields: [
+        {
+            name: 'interfaceTitle',
+            label: {
+                en: 'Interface title',
+                nl: 'Gebruikersinterface titel'
+            },
+            type: 'text',
+            unique: true,
+            required: true,
+            admin: {
+                description: {
+                    en: 'The interface title will be displayed in the dashboard. Give it a unique name for easy identification.',
+                    nl: 'De gebruikersinterface titel wordt in het dashboard weergegeven. Geef het een unieke naam voor gemakkelijke identificatie.'
+                }
+            }
+        },
         {
             name: 'title',
             label: 'Title',
@@ -46,57 +55,37 @@ const News: CollectionConfig = {
                 position: 'sidebar',
                 readOnly: true,
                 description:
-                    'This field is  automatically generated based on the title. To change it, edit the title field.',
+                    'This field is automatically generated based on the title. To change it, edit the title field.',
             },
             hooks: {
                 beforeChange: [
                     ({ siblingData }) => {
                         siblingData.slug = siblingData.title
                             .toLowerCase()
-                            .replace(/[\s\-_]+/g, '-') // Replace spaces, -, _ with -
-                            .replace(/[^\w-]/g, '') // Remove all other symbols
+                            .replace(/ /g, '-')
                     },
                 ],
                 beforeValidate: [
                     ({ data, siblingData }) => {
                         if (!data) return;
                         if (!siblingData.slug && siblingData.title) {
-                            // Ensure slug is generated if it's missing and title exists
-                            data.slug = siblingData.title
-                                .toLowerCase()
-                                .replace(/[\s\-_]+/g, '-') // Replace spaces, -, _ with -
-                                .replace(/[^\w-]/g, '') // Remove all other symbols
+                            data.slug = siblingData.title.toLowerCase().replace(/ /g, '-')
                         }
                     },
                 ],
             },
         },
         {
-            name: 'route',
-            type: 'text',
-            hidden: true,
-            hooks: {
-                beforeChange: [
-                    ({ siblingData }) => {
-                        delete siblingData['route']
-                    },
-                ],
-                afterRead: [
-                    ({ data }) => {
-                        if (!data) return;
-                        switch (data.template) {
-                            case 'Home':
-                                return '/'
-                            default:
-                                return `/${data.title
-                                        .toLowerCase()
-                                        .replace(/[\s\-_]+/g, '-') // Replace spaces, -, _ with -
-                                        .replace(/[^\w-]/g, '') // Remove all other symbols
-                                    }`
-                        }
-                    },
-                ],
-            },
+            name: 'blog',
+            type: 'relationship',
+            relationTo: 'blogs',
+            admin: {
+                position: 'sidebar',
+                description: {
+                    en: 'Select the blog this article belongs to.',
+                    nl: 'Selecteer de blog waar dit artiekel bij hoort.'
+                }
+            }
         },
         {
             name: 'excerpt',
@@ -133,6 +122,24 @@ const News: CollectionConfig = {
             },
         },
         {
+            name: 'route',
+            type: 'text',
+            hidden: true,
+            hooks: {
+                beforeChange: [
+                    ({ siblingData }) => {
+                        delete siblingData['route']
+                    },
+                ],
+                afterRead: [
+                    ({ data }) => {
+                        if (!data) return;
+                        return `/${data.title.toLowerCase().replace(/ /g, '-')}`
+                    },
+                ],
+            },
+        },
+        {
             name: 'blocks',
             label: 'Blocks',
             type: 'blocks',
@@ -141,4 +148,4 @@ const News: CollectionConfig = {
     ],
 }
 
-export default News
+export default Articles

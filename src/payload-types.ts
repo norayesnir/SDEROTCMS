@@ -79,13 +79,13 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    articles: Article;
+    blogs: Blog;
     buttons: Button;
     categories: Categories;
     images: Image;
     menu_item: MenuItem;
-    news: News;
     pages: Page;
-    projects: Project;
     teamMembers: TeamMembers;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
@@ -94,13 +94,13 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    blogs: BlogsSelect<false> | BlogsSelect<true>;
     buttons: ButtonsSelect<false> | ButtonsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     images: ImagesSelect<false> | ImagesSelect<true>;
     menu_item: MenuItemSelect<false> | MenuItemSelect<true>;
-    news: NewsSelect<false> | NewsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
-    projects: ProjectsSelect<false> | ProjectsSelect<true>;
     teamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -147,70 +147,48 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "buttons".
+ * via the `definition` "articles".
  */
-export interface Button {
+export interface Article {
   id: number;
-  title: string;
-  referenceToPage?:
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
-      } | null)
-    | ({
-        relationTo: 'news';
-        value: number | News;
-      } | null)
-    | ({
-        relationTo: 'projects';
-        value: number | Project;
-      } | null);
-  externalUrl?: string | null;
-  externalLink?: boolean | null;
-  openInNewTab?: boolean | null;
-  icon?: {
-    icon?: string | null;
-    right?: boolean | null;
-  };
-  colorGroup?: {
-    /**
-     * Select the color of the button
-     */
-    color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
-  };
-  typeGroup?: {
-    /**
-     * Select the type of the button
-     */
-    type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: number;
-  archive?: {
-    blocks?: HeroBlock[] | null;
-  };
-  fields?: {
-    blocks?:
-      | (HeroBlock | ContentImageBlock | ContentContentBlock | ImagesBlock | ContentContactBlock | TeamBlock)[]
-      | null;
-  };
+  /**
+   * The interface title will be displayed in the dashboard. Give it a unique name for easy identification.
+   */
+  interfaceTitle: string;
   title: string;
   /**
    * This field is automatically generated based on the title. To change it, edit the title field.
    */
   slug?: string | null;
   /**
-   * A template must be selected to display relevant page fields. Changing the template on existing pages will result in data loss.
+   * Select the blog this article belongs to.
    */
-  template: 'Archive' | 'Default';
+  blog?: (number | null) | Blog;
+  excerpt?: string | null;
+  featuredImage?: (number | null) | Image;
+  categories?: (number | Categories)[] | null;
   route?: string | null;
+  blocks?: (HeroBlock | ContentBlock | RichTextBlock)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blogs".
+ */
+export interface Blog {
+  id: number;
+  /**
+   * The interface title will be displayed in the dashboard. Give it a unique name for easy identification.
+   */
+  interfaceTitle: string;
+  title: string;
+  /**
+   * This field is automatically generated based on the title. To change it, edit the title field.
+   */
+  slug?: string | null;
+  route?: string | null;
+  blocks?: (HeroBlock | ContentBlock | RichTextBlock)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -257,25 +235,63 @@ export interface Heading {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "images".
+ * via the `definition` "buttons".
  */
-export interface Image {
+export interface Button {
   id: number;
-  /**
-   * For vision-impaired users with screen readers, this is more descriptive than a caption.
-   */
-  description?: string | null;
+  title: string;
+  referenceToPage?:
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null);
+  externalUrl?: string | null;
+  externalLink?: boolean | null;
+  openInNewTab?: boolean | null;
+  icon?: {
+    icon?: string | null;
+    right?: boolean | null;
+  };
+  colorGroup?: {
+    /**
+     * Select the color of the button
+     */
+    color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  };
+  typeGroup?: {
+    /**
+     * Select the type of the button
+     */
+    type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
+  };
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  /**
+   * The interface title will be displayed in the dashboard. Give it a unique name for easy identification.
+   */
+  interfaceTitle?: string | null;
+  title: string;
+  /**
+   * This field is automatically generated based on the title. To change it, edit the title field.
+   */
+  slug?: string | null;
+  blocks?:
+    | (HeroBlock | ContentImageBlock | ContentContentBlock | ImagesBlock | ContentContactBlock | TeamBlock)[]
+    | null;
+  route?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -327,6 +343,28 @@ export interface ContentImageBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'contentImageBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "images".
+ */
+export interface Image {
+  id: number;
+  /**
+   * For vision-impaired users with screen readers, this is more descriptive than a caption.
+   */
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -551,41 +589,6 @@ export interface TeamMembers {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news".
- */
-export interface News {
-  id: number;
-  title: string;
-  /**
-   * This field is  automatically generated based on the title. To change it, edit the title field.
-   */
-  slug?: string | null;
-  route?: string | null;
-  excerpt?: string | null;
-  featuredImage?: (number | null) | Image;
-  categories?: (number | Categories)[] | null;
-  blocks?: (HeroBlock | ContentBlock | RichTextBlock)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Categories {
-  id: number;
-  label?: string | null;
-  color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
-  type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
-  icon?: {
-    icon?: string | null;
-    right?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
@@ -651,20 +654,17 @@ export interface RichTextBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects".
+ * via the `definition` "categories".
  */
-export interface Project {
+export interface Categories {
   id: number;
-  title: string;
-  /**
-   * This field is  automatically generated based on the title. To change it, edit the title field.
-   */
-  slug?: string | null;
-  route?: string | null;
-  excerpt?: string | null;
-  featuredImage?: (number | null) | Image;
-  categories?: (number | Categories)[] | null;
-  blocks?: (HeroBlock | ContentBlock | RichTextBlock | ImagesBlock)[] | null;
+  label?: string | null;
+  color?: ('primary' | 'secondary' | 'tertiary' | 'white' | 'black') | null;
+  type?: ('filled' | 'outlined' | 'link' | 'ghost') | null;
+  icon?: {
+    icon?: string | null;
+    right?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -684,7 +684,15 @@ export interface MenuItem {
      * Check this box if the link is external
      */
     externalLink?: boolean | null;
-    referenceToPage?: (number | null) | Page;
+    referenceToPage?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'blogs';
+          value: number | Blog;
+        } | null);
     externalUrl?: string | null;
     /**
      * Check this box if the link should open in a new tab
@@ -737,6 +745,14 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
+        relationTo: 'blogs';
+        value: number | Blog;
+      } | null)
+    | ({
         relationTo: 'buttons';
         value: number | Button;
       } | null)
@@ -753,16 +769,8 @@ export interface PayloadLockedDocument {
         value: number | MenuItem;
       } | null)
     | ({
-        relationTo: 'news';
-        value: number | News;
-      } | null)
-    | ({
         relationTo: 'pages';
         value: number | Page;
-      } | null)
-    | ({
-        relationTo: 'projects';
-        value: number | Project;
       } | null)
     | ({
         relationTo: 'teamMembers';
@@ -813,6 +821,101 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  interfaceTitle?: T;
+  title?: T;
+  slug?: T;
+  blog?: T;
+  excerpt?: T;
+  featuredImage?: T;
+  categories?: T;
+  route?: T;
+  blocks?:
+    | T
+    | {
+        heroBlock?: T | HeroBlockSelect<T>;
+        contentBlock?: T | ContentBlockSelect<T>;
+        richTextBlock?: T | RichTextBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Heading_select".
+ */
+export interface HeadingSelect<T extends boolean = true> {
+  value?: T;
+  type?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        heading?: T | HeadingSelect<T>;
+        subtitle?: T;
+        text?: T;
+        buttons?: T;
+      };
+  renderAsCard?: T;
+  cardBackgroundColor?: T;
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock_select".
+ */
+export interface RichTextBlockSelect<T extends boolean = true> {
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blogs_select".
+ */
+export interface BlogsSelect<T extends boolean = true> {
+  interfaceTitle?: T;
+  title?: T;
+  slug?: T;
+  route?: T;
+  blocks?:
+    | T
+    | {
+        heroBlock?: T | HeroBlockSelect<T>;
+        contentBlock?: T | ContentBlockSelect<T>;
+        richTextBlock?: T | RichTextBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -914,109 +1017,22 @@ export interface MenuItemSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news_select".
+ * via the `definition` "pages_select".
  */
-export interface NewsSelect<T extends boolean = true> {
+export interface PagesSelect<T extends boolean = true> {
+  interfaceTitle?: T;
   title?: T;
   slug?: T;
-  route?: T;
-  excerpt?: T;
-  featuredImage?: T;
-  categories?: T;
   blocks?:
     | T
     | {
         heroBlock?: T | HeroBlockSelect<T>;
-        contentBlock?: T | ContentBlockSelect<T>;
-        richTextBlock?: T | RichTextBlockSelect<T>;
+        contentImageBlock?: T | ContentImageBlockSelect<T>;
+        contentContentBlock?: T | ContentContentBlockSelect<T>;
+        imagesBlock?: T | ImagesBlockSelect<T>;
+        contentContactBlock?: T | ContentContactBlockSelect<T>;
+        teamBlock?: T | TeamBlockSelect<T>;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HeroBlock_select".
- */
-export interface HeroBlockSelect<T extends boolean = true> {
-  content?:
-    | T
-    | {
-        heading?: T | HeadingSelect<T>;
-        subtitle?: T;
-        text?: T;
-        buttons?: T;
-      };
-  image?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Heading_select".
- */
-export interface HeadingSelect<T extends boolean = true> {
-  value?: T;
-  type?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock_select".
- */
-export interface ContentBlockSelect<T extends boolean = true> {
-  content?:
-    | T
-    | {
-        heading?: T | HeadingSelect<T>;
-        subtitle?: T;
-        text?: T;
-        buttons?: T;
-      };
-  renderAsCard?: T;
-  cardBackgroundColor?: T;
-  backgroundColor?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RichTextBlock_select".
- */
-export interface RichTextBlockSelect<T extends boolean = true> {
-  richText?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages_select".
- */
-export interface PagesSelect<T extends boolean = true> {
-  archive?:
-    | T
-    | {
-        blocks?:
-          | T
-          | {
-              heroBlock?: T | HeroBlockSelect<T>;
-            };
-      };
-  fields?:
-    | T
-    | {
-        blocks?:
-          | T
-          | {
-              heroBlock?: T | HeroBlockSelect<T>;
-              contentImageBlock?: T | ContentImageBlockSelect<T>;
-              contentContentBlock?: T | ContentContentBlockSelect<T>;
-              imagesBlock?: T | ImagesBlockSelect<T>;
-              contentContactBlock?: T | ContentContactBlockSelect<T>;
-              teamBlock?: T | TeamBlockSelect<T>;
-            };
-      };
-  title?: T;
-  slug?: T;
-  template?: T;
   route?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1137,28 +1153,6 @@ export interface TeamBlockSelect<T extends boolean = true> {
   members?: T;
   id?: T;
   blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "projects_select".
- */
-export interface ProjectsSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  route?: T;
-  excerpt?: T;
-  featuredImage?: T;
-  categories?: T;
-  blocks?:
-    | T
-    | {
-        heroBlock?: T | HeroBlockSelect<T>;
-        contentBlock?: T | ContentBlockSelect<T>;
-        richTextBlock?: T | RichTextBlockSelect<T>;
-        imagesBlock?: T | ImagesBlockSelect<T>;
-      };
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

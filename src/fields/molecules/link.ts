@@ -20,7 +20,7 @@ const Link: Field[] = [
           nl: 'Verwijzing naar pagina',
         },
         type: 'relationship',
-        relationTo: ['pages', 'news', 'projects'],
+        relationTo: ['pages', 'articles'],
         required: true,
         admin: {
           condition: (_, siblingData) => !siblingData.externalLink,

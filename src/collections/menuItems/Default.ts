@@ -33,7 +33,7 @@ const Default: Field = {
                 nl: 'Verwijzing naar pagina',
             },
             type: 'relationship',
-            relationTo: 'pages',
+            relationTo: ['pages', 'blogs'],
             hasMany: false,
             admin: {
                 condition: (_, siblingData) => !siblingData.externalLink,
