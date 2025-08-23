@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
-        "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+        "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --port 3001",
         "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
         "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
         "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
@@ -51,7 +51,7 @@
         "vitest": "3.2.3"
     },
     "engines": {
-        "node": "v20.17.0",
+        "node": "v20.19.3",
         "pnpm": "9.1.0"
     },
     "pnpm": {

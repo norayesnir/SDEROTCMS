@@ -76,6 +76,7 @@ export default buildConfig({
     ],
     cors: [
         SITE_URL as string,
-        BLOB_BASE_URL as string
+        BLOB_BASE_URL as string,
+        process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : ''
     ]
 })

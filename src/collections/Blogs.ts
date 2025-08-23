@@ -1,27 +1,14 @@
 import type { CollectionConfig } from 'payload'
-import * as PageTemplates from './pageTemplates'
-import {
-    HeroBlock,
-    ContentImageBlock,
-    ContentContentBlock,
-    ImagesBlock,
-    ContentContactBlock,
-    TeamBlock,
-} from '../../blocks'
+import { HeroBlock, ContentBlock, RichTextBlock } from '../blocks'
 
-const Pages: CollectionConfig = {
-    slug: 'pages',
-    labels: {
-        singular: 'Page',
-        plural: 'Pages',
+const Blogs: CollectionConfig = {
+    slug: 'blogs',
+    access: {
+        read: (_) => true,
     },
     admin: {
         useAsTitle: 'interfaceTitle',
     },
-    access: {
-        read: () => true,
-    },
-    versions: true,
     fields: [
         {
             name: 'interfaceTitle',
@@ -31,6 +18,7 @@ const Pages: CollectionConfig = {
             },
             type: 'text',
             unique: true,
+            required: true,
             admin: {
                 description: {
                     en: 'The interface title will be displayed in the dashboard. Give it a unique name for easy identification.',
@@ -76,19 +64,6 @@ const Pages: CollectionConfig = {
             },
         },
         {
-            name: 'blocks',
-            label: 'Blocks',
-            type: 'blocks',
-            blocks: [
-                HeroBlock,
-                ContentImageBlock,
-                ContentContentBlock,
-                ImagesBlock,
-                ContentContactBlock,
-                TeamBlock,
-            ],
-        },
-        {
             name: 'route',
             type: 'text',
             hidden: true,
@@ -101,16 +76,18 @@ const Pages: CollectionConfig = {
                 afterRead: [
                     ({ data }) => {
                         if (!data) return;
-                        if (data.slug === 'home') {
-                            return '/'
-                        }
                         return `/${data.title.toLowerCase().replace(/ /g, '-')}`
                     },
                 ],
             },
         },
+        {
+            name: 'blocks',
+            label: 'Blocks',
+            type: 'blocks',
+            blocks: [HeroBlock, ContentBlock, RichTextBlock],
+        },
     ]
 }
 
-export default Pages
-
+export default Blogs
