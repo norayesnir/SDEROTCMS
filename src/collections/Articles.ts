@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { image } from '../fields'
-import { HeroBlock, ContentBlock, ContentImageBlock, RichTextBlock } from '../blocks'
+import { HeroBlock, ContentBlock, RichTextBlock } from '../blocks'
 
 const Articles: CollectionConfig = {
     slug: 'articles',
